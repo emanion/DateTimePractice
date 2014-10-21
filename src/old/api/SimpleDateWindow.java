@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package old.api;
 
@@ -36,6 +32,11 @@ public class SimpleDateWindow extends javax.swing.JFrame {
         txtDateString = new javax.swing.JTextField();
         btnStoreDate = new javax.swing.JButton();
         lblStringDate = new javax.swing.JLabel();
+        lblPromptTwo = new javax.swing.JLabel();
+        txtDateStringTwo = new javax.swing.JTextField();
+        lblDateDiffLabel = new javax.swing.JLabel();
+        lblDateDiff = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,25 +54,46 @@ public class SimpleDateWindow extends javax.swing.JFrame {
 
         lblStringDate.setText(".......");
 
+        lblPromptTwo.setText("Enter Second Date");
+
+        txtDateStringTwo.setText("....");
+
+        lblDateDiffLabel.setText("Difference Days");
+
+        lblDateDiff.setText(".....");
+
+        jLabel4.setText("**Dates in MM/DD/YYY format");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblStringDate)
-                    .addComponent(btnStoreDate)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPrompt)
+                        .addGap(77, 77, 77)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblStringDate)
+                            .addComponent(btnStoreDate)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblPrompt)
+                                    .addComponent(lblPromptTwo)
+                                    .addComponent(lblDateDiffLabel))
+                                .addGap(41, 41, 41)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblDateDiff)
+                                    .addComponent(txtDateString, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                                    .addComponent(txtDateStringTwo)))))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addComponent(txtDateString, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                        .addComponent(jLabel4)))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(118, 118, 118)
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPrompt)
                     .addComponent(txtDateString, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -79,7 +101,17 @@ public class SimpleDateWindow extends javax.swing.JFrame {
                 .addComponent(btnStoreDate)
                 .addGap(38, 38, 38)
                 .addComponent(lblStringDate)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPromptTwo)
+                    .addComponent(txtDateStringTwo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDateDiffLabel)
+                    .addComponent(lblDateDiff))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -88,9 +120,21 @@ public class SimpleDateWindow extends javax.swing.JFrame {
     private void btnStoreDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStoreDateActionPerformed
         Order order = new Order();
         String dateValue = txtDateString.getText();
+        String dateValueTwo = txtDateStringTwo.getText();
         try {
-            order.setOrderDateFromString(dateValue, "M/d/yyy");
+            order.setOrderDateFromString(dateValue, "M/d/yyy");  //lower m = milliseconds
             lblStringDate.setText(lblStringDate.getText() + order.getOrderDate());
+            // below code is to convert dates and calc diff.
+            // step 1 - convert both Strings to a Date object -  first is done above.
+            order.setDateTwoFromString(dateValueTwo, "M/d/yyy");
+            // step 2 - convert both Dates to a Calendar object.
+            order.setOrderDateCal();   //will set Calender ojbect for orderDate
+            order.setDateTwoCal();     //will set Calendar object for dateTwo
+            // step 3 - calc days diff using Calendar objects.
+            double daysDiff = order.getDaysDiff();       //will calc difference
+            // step 4 -  set output label field with calculated difference
+            lblDateDiff.setText(Double.toString(daysDiff));
+            
         } catch (ParseException ex) {
         JOptionPane.showMessageDialog(this, "Sorry you must enter a date in the format needed");
         return;
@@ -135,8 +179,13 @@ public class SimpleDateWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStoreDate;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblDateDiff;
+    private javax.swing.JLabel lblDateDiffLabel;
     private javax.swing.JLabel lblPrompt;
+    private javax.swing.JLabel lblPromptTwo;
     private javax.swing.JLabel lblStringDate;
     private javax.swing.JTextField txtDateString;
+    private javax.swing.JTextField txtDateStringTwo;
     // End of variables declaration//GEN-END:variables
 }
